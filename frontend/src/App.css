@@ -87,6 +87,17 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .btn-merge { color: var(--primary); border-color: var(--primary); }
 .btn-discard { color: var(--danger); border-color: var(--danger); }
 
+/* Error messages */
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
 /* Forms */
 .create-form {
   display: flex;
