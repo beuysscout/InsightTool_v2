@@ -4,12 +4,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Insight Tool is an AI-augmented research analysis platform that analyzes customer interview transcripts to produce evidence-backed insights for product design opportunities. The project is currently in the **planning/pre-implementation phase**.
+Insight Tool is an AI-augmented research analysis platform that analyzes customer interview transcripts to produce evidence-backed insights for product design opportunities.
 
 ## Repository Status
 
-- `projectplan.md` — **Confirmed project plan** — the decision-locked UX flow, data models, agent architecture, and build phases. This is the source of truth for what to build.
-- No build system, tests, linting, or source code exist yet.
+- `projectplan.md` — Confirmed project plan — UX flow, data models, agent architecture, and build phases.
+- `backend/` — FastAPI backend with Pydantic models, AI agents, and REST API.
+- `frontend/` — React + TypeScript frontend with Vite.
+
+## Commands
+
+**Backend:**
+```bash
+cd backend
+pip install -e ".[dev]"
+uvicorn app.main:app --reload
+pytest tests/ -v
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev          # dev server on :5173
+npx tsc --noEmit     # type check
+```
+
+## Codebase Structure
+
+```
+backend/
+├── app/
+│   ├── main.py              # FastAPI app, CORS, router mounts
+│   ├── config.py            # Settings (env vars: SUPABASE_URL, ANTHROPIC_API_KEY)
+│   ├── models/              # Pydantic models (guide, session, theme, insight, project)
+│   ├── api/                 # Route handlers (projects, guides, sessions, themes)
+│   ├── agents/              # AI agents (guide_reviewer, transcript_organiser, theme_extractor)
+│   ├── services/            # parser.py (markdown→turns), anonymiser.py (Presidio PII)
+│   └── db/
+│       ├── supabase.py       # Supabase client singleton
+│       └── store.py          # Supabase-backed project store (JSONB serialisation)
+├── supabase/migrations/      # SQL schema (001_initial_schema.sql)
+├── tests/
+├── .env                       # SUPABASE_URL, SUPABASE_KEY, ANTHROPIC_API_KEY (gitignored)
+└── pyproject.toml
+
+frontend/
+├── src/
+│   ├── App.tsx              # Router setup
+│   ├── api/client.ts        # API client (all backend calls)
+│   ├── types/models.ts      # TypeScript types mirroring backend models
+│   └── pages/               # ProjectList, ProjectDetail, GuideReview,
+│                              TranscriptUpload, SessionDetail, ThemesOverview
+└── package.json
+```
 
 ## Confirmed UX Flow (6 Steps)
 

@@ -1,0 +1,25 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.api import guides, projects, sessions, themes
+from app.config import settings
+
+app = FastAPI(title=settings.app_name, version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(projects.router, prefix="/api/projects", tags=["projects"])
+app.include_router(guides.router, prefix="/api/projects/{project_id}/guide", tags=["guides"])
+app.include_router(sessions.router, prefix="/api/projects/{project_id}/sessions", tags=["sessions"])
+app.include_router(themes.router, prefix="/api/projects/{project_id}/themes", tags=["themes"])
+
+
+@app.get("/api/health")
+async def health():
+    return {"status": "ok"}
