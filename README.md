@@ -1,3 +1,3 @@
 Insight & Analysis Tool
 
-A experiment tool to help design and product researcher conduct insight synthesis. 
+A experimental tool to help design and product researchers conduct insight synthesis. 
