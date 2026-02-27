@@ -37,8 +37,11 @@ async def upload_and_review_guide(
         research_goals=goals,
     )
 
-    # Attach project_id to the parsed guide
+    # Attach project_id and review metadata to the parsed guide
     result.parsed_guide.project_id = project_id
+    result.parsed_guide.review_flags = result.flags
+    result.parsed_guide.coverage_gaps = result.coverage_gaps
+    result.parsed_guide.estimated_duration_minutes = result.estimated_duration_minutes
 
     # Save the parsed guide (unlocked — researcher reviews first)
     store.save_guide(project_id, result.parsed_guide)

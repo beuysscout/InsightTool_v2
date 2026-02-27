@@ -84,6 +84,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .btn-sm { padding: 4px 10px; font-size: 13px; }
 
 .btn-accept { color: var(--success); border-color: var(--success); }
+.btn-merge { color: var(--primary); border-color: var(--primary); }
 .btn-discard { color: var(--danger); border-color: var(--danger); }
 
 /* Forms */
@@ -168,6 +169,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .status-collecting, .status-themed { background: #d1fae5; color: #065f46; }
 .status-proposed { background: #fef3c7; color: #92400e; }
 .status-accepted { background: #d1fae5; color: #065f46; }
+.status-merged { background: #dbeafe; color: #1e40af; }
 .status-discarded { background: #fee2e2; color: #991b1b; }
 
 .badge-locked {
@@ -367,3 +369,16 @@ main { max-width: 1100px; margin: 0 auto; padding: 24px; }
 
 /* PII */
 .pii-review { margin-top: 16px; }
+
+/* Danger zone */
+.danger-zone {
+  border-color: var(--danger);
+  margin-top: 32px;
+}
+.danger-zone h2 { color: var(--danger); }
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+.btn-danger:hover { opacity: 0.85; }

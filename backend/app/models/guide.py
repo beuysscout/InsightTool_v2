@@ -41,6 +41,9 @@ class ResearchGuide(BaseModel):
     objective: str = ""
     research_goals: list[str] = Field(default_factory=list)
     sections: list[GuideSection] = Field(default_factory=list)
+    review_flags: list[AiFlag] = Field(default_factory=list)
+    coverage_gaps: list[str] = Field(default_factory=list)
+    estimated_duration_minutes: int | None = None
     version: int = 1
     locked: bool = False
 

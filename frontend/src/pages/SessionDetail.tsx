@@ -25,6 +25,8 @@ export default function SessionDetail() {
   const [piiDetections, setPiiDetections] = useState<PiiDetection[] | null>(null);
   const [themes, setThemes] = useState<SessionThemes | null>(null);
   const [processing, setProcessing] = useState("");
+  const [interviewerName, setInterviewerName] = useState("");
+  const [participantName, setParticipantName] = useState("");
 
   useEffect(() => {
     if (!projectId || !sessionId) return;
@@ -45,7 +47,12 @@ export default function SessionDetail() {
     if (!projectId || !sessionId) return;
     setProcessing("Scanning for personal information...");
     try {
-      const dets = (await scanPii(projectId, sessionId)) as PiiDetection[];
+      const dets = (await scanPii(
+        projectId,
+        sessionId,
+        interviewerName || undefined,
+        participantName || undefined
+      )) as PiiDetection[];
       setPiiDetections(dets);
     } catch (err) {
       alert(`PII scan failed: ${err}`);
@@ -129,6 +136,26 @@ export default function SessionDetail() {
       {/* Step 2a: PII Scan */}
       {session.status === "uploaded" && !piiDetections && (
         <div className="action-bar">
+          <div className="form-group" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+            <div>
+              <label>Interviewer name (optional)</label>
+              <input
+                type="text"
+                value={interviewerName}
+                onChange={(e) => setInterviewerName(e.target.value)}
+                placeholder="e.g. Sarah"
+              />
+            </div>
+            <div>
+              <label>Participant name (optional)</label>
+              <input
+                type="text"
+                value={participantName}
+                onChange={(e) => setParticipantName(e.target.value)}
+                placeholder="e.g. John"
+              />
+            </div>
+          </div>
           <button onClick={handleScanPii} className="btn btn-primary">
             Scan for Personal Information
           </button>
