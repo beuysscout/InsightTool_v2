@@ -41,8 +41,12 @@ backend/
 │   ├── api/                 # Route handlers (projects, guides, sessions, themes)
 │   ├── agents/              # AI agents (guide_reviewer, transcript_organiser, theme_extractor)
 │   ├── services/            # parser.py (markdown→turns), anonymiser.py (Presidio PII)
-│   └── db/store.py          # In-memory store (will be replaced with Supabase)
+│   └── db/
+│       ├── supabase.py       # Supabase client singleton
+│       └── store.py          # Supabase-backed project store (JSONB serialisation)
+├── supabase/migrations/      # SQL schema (001_initial_schema.sql)
 ├── tests/
+├── .env                       # SUPABASE_URL, SUPABASE_KEY, ANTHROPIC_API_KEY (gitignored)
 └── pyproject.toml
 
 frontend/
