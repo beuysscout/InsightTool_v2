@@ -8,8 +8,7 @@ Insight Tool is an AI-augmented research analysis platform that analyzes custome
 
 ## Repository Status
 
-- `projectplan.md` — Original comprehensive research plan (1,200+ lines) covering workflows, agent specifications, data structures, UI flows, and privacy architecture.
-- `ux-flow.md` — **Confirmed UX flow and project plan** — the refined, decision-locked version that guides implementation. This is the source of truth for what to build.
+- `projectplan.md` — **Confirmed project plan** — the decision-locked UX flow, data models, agent architecture, and build phases. This is the source of truth for what to build.
 - No build system, tests, linting, or source code exist yet.
 
 ## Confirmed UX Flow (6 Steps)
