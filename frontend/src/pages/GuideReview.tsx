@@ -53,13 +53,12 @@ export default function GuideReview() {
 
   const handleDismissFlag = async (flagIndex: number) => {
     if (!guide || !projectId) return;
-    // Update flag status on the guide sections' question flags
-    // For simplicity, we track review result flags
-    if (reviewResult) {
-      const updated = { ...reviewResult };
-      updated.flags = updated.flags.filter((_, i) => i !== flagIndex);
-      setReviewResult(updated);
-    }
+    const updatedFlags = guide.review_flags.map((f: AiFlag, i: number) =>
+      i === flagIndex ? { ...f, status: "dismissed" } : f
+    );
+    const updatedGuide = { ...guide, review_flags: updatedFlags };
+    setGuide(updatedGuide as ResearchGuide);
+    await updateGuide(projectId, updatedGuide);
   };
 
   // No guide yet — show upload form
@@ -127,37 +126,43 @@ export default function GuideReview() {
       )}
 
       {/* AI Flags */}
-      {reviewResult && reviewResult.flags.length > 0 && (
+      {guide.review_flags?.filter((f: AiFlag) => f.status !== "dismissed").length > 0 && (
         <div className="flags-panel">
-          <h3>AI Review Flags ({reviewResult.flags.length})</h3>
-          {reviewResult.flags.map((flag: AiFlag, i: number) => (
-            <div key={i} className={`flag flag-${flag.flag_type}`}>
-              <span className="flag-type">{flag.flag_type.replace(/_/g, " ")}</span>
-              <p>{flag.message}</p>
-              {flag.suggestion && (
-                <p className="flag-suggestion">Suggestion: {flag.suggestion}</p>
-              )}
-              <button onClick={() => handleDismissFlag(i)} className="btn-sm">
-                Dismiss
-              </button>
-            </div>
-          ))}
+          <h3>
+            AI Review Flags (
+            {guide.review_flags.filter((f: AiFlag) => f.status !== "dismissed").length}
+            )
+          </h3>
+          {guide.review_flags.map((flag: AiFlag, i: number) =>
+            flag.status === "dismissed" ? null : (
+              <div key={i} className={`flag flag-${flag.flag_type}`}>
+                <span className="flag-type">{flag.flag_type.replace(/_/g, " ")}</span>
+                <p>{flag.message}</p>
+                {flag.suggestion && (
+                  <p className="flag-suggestion">Suggestion: {flag.suggestion}</p>
+                )}
+                <button onClick={() => handleDismissFlag(i)} className="btn-sm">
+                  Dismiss
+                </button>
+              </div>
+            )
+          )}
         </div>
       )}
 
       {/* Coverage gaps */}
-      {reviewResult && reviewResult.coverage_gaps.length > 0 && (
+      {guide.coverage_gaps?.length > 0 && (
         <div className="flags-panel">
           <h3>Coverage Gaps</h3>
-          {reviewResult.coverage_gaps.map((gap, i) => (
+          {guide.coverage_gaps.map((gap: string, i: number) => (
             <p key={i} className="coverage-gap">No questions cover: {gap}</p>
           ))}
         </div>
       )}
 
-      {reviewResult?.estimated_duration_minutes && (
+      {guide.estimated_duration_minutes && (
         <p className="muted">
-          Estimated duration: ~{reviewResult.estimated_duration_minutes} minutes
+          Estimated duration: ~{guide.estimated_duration_minutes} minutes
         </p>
       )}
 

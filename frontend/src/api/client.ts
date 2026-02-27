@@ -93,9 +93,18 @@ export async function getSession(projectId: string, sessionId: string) {
   return request(`/projects/${projectId}/sessions/${sessionId}`);
 }
 
-export async function scanPii(projectId: string, sessionId: string) {
+export async function scanPii(
+  projectId: string,
+  sessionId: string,
+  interviewerName?: string,
+  participantName?: string
+) {
+  const body: Record<string, string> = {};
+  if (interviewerName) body.interviewer_name = interviewerName;
+  if (participantName) body.participant_name = participantName;
   return request(`/projects/${projectId}/sessions/${sessionId}/scan-pii`, {
     method: "POST",
+    body: Object.keys(body).length ? JSON.stringify(body) : undefined,
   });
 }
 

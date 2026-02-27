@@ -38,6 +38,9 @@ export interface ResearchGuide {
   objective: string;
   research_goals: string[];
   sections: GuideSection[];
+  review_flags: AiFlag[];
+  coverage_gaps: string[];
+  estimated_duration_minutes: number | null;
   version: number;
   locked: boolean;
 }

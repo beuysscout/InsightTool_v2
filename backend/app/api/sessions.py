@@ -58,14 +58,27 @@ async def get_session(project_id: str, session_id: str):
 
 # --- PII Anonymisation ---
 
+class ScanPiiRequest(BaseModel):
+    interviewer_name: str | None = None
+    participant_name: str | None = None
+
+
 @router.post("/{session_id}/scan-pii", response_model=list[PiiDetection])
-async def scan_pii(project_id: str, session_id: str):
+async def scan_pii(
+    project_id: str,
+    session_id: str,
+    body: ScanPiiRequest | None = None,
+):
     """Run PII scan on transcript turns. Returns detections for review."""
     session = store.get_session(session_id)
     if not session or session.project_id != project_id:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    detections = scan_turns_for_pii(session.transcript)
+    detections = scan_turns_for_pii(
+        session.transcript,
+        interviewer_name=body.interviewer_name if body else None,
+        participant_name=body.participant_name if body else None,
+    )
 
     # Store detections on the session for later
     session.anonymisation_log.detections = detections

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getProject, getGuide, listSessions } from "../api/client";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { getProject, getGuide, listSessions, deleteProject } from "../api/client";
 import type { Project, ResearchGuide, Session } from "../types/models";
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [guide, setGuide] = useState<ResearchGuide | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!projectId) return;
@@ -15,6 +17,19 @@ export default function ProjectDetail() {
     getGuide(projectId).then((d) => setGuide(d as ResearchGuide | null));
     listSessions(projectId).then((d) => setSessions(d as Session[]));
   }, [projectId]);
+
+  const handleDelete = async () => {
+    if (!projectId) return;
+    if (!window.confirm(`Delete "${project?.name}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await deleteProject(projectId);
+      navigate("/");
+    } catch (err) {
+      alert(`Delete failed: ${err}`);
+      setDeleting(false);
+    }
+  };
 
   if (!project) return <p className="muted">Loading...</p>;
 
@@ -101,6 +116,18 @@ export default function ProjectDetail() {
           </Link>
         </section>
       )}
+
+      {/* Danger zone */}
+      <section className="section-card danger-zone">
+        <h2>Danger Zone</h2>
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="btn btn-danger"
+        >
+          {deleting ? "Deleting..." : "Delete Project"}
+        </button>
+      </section>
     </div>
   );
 }

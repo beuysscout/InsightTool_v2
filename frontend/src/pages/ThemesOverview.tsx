@@ -92,6 +92,18 @@ export default function ThemesOverview() {
                           handleStatusChange(
                             st.session_id,
                             theme.theme_id,
+                            "merged"
+                          )
+                        }
+                        className="btn-sm btn-merge"
+                      >
+                        Merge
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStatusChange(
+                            st.session_id,
+                            theme.theme_id,
                             "discarded"
                           )
                         }
