@@ -7,24 +7,38 @@ export default function ProjectList() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     listProjects()
       .then((data) => setProjects(data as Project[]))
+      .catch((err) => setError(`Failed to load projects: ${err.message}`))
       .finally(() => setLoading(false));
   }, []);
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
-    const project = (await createProject(newName.trim())) as Project;
-    setNewName("");
-    navigate(`/projects/${project.project_id}`);
+    setCreating(true);
+    setError(null);
+    try {
+      const project = (await createProject(newName.trim())) as Project;
+      setNewName("");
+      navigate(`/projects/${project.project_id}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setError(`Failed to create project: ${msg}`);
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
     <div className="page">
       <h1>Projects</h1>
+
+      {error && <p className="error-message">{error}</p>}
 
       <div className="create-form">
         <input
@@ -33,9 +47,10 @@ export default function ProjectList() {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+          disabled={creating}
         />
-        <button onClick={handleCreate} disabled={!newName.trim()}>
-          Create Project
+        <button onClick={handleCreate} disabled={!newName.trim() || creating}>
+          {creating ? "Creating..." : "Create Project"}
         </button>
       </div>
 
