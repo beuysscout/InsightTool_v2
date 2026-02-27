@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     claude_model: str = "claude-sonnet-4-20250514"
 
+    # Store backend: "supabase" or "memory"
+    store_backend: str = "supabase"
+
     # File storage
     upload_dir: str = "./uploads"
     max_upload_size_mb: int = 50
